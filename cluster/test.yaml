@@ -4,6 +4,7 @@ metadata:
   name: nginx
   label:
     app: nginx
+  namespace: nginx-test
 spec:
   containers:
   - name: nginx

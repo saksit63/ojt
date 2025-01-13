@@ -43,7 +43,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
-  label:
+  labels:
     app: nginx
   namespace: nginx
 spec:

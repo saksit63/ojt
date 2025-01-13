@@ -8,10 +8,10 @@ metadata:
     konghq.com/protocol: "https"
 spec:
   ports:
-  - name: https
-    port: 443
+  - name: http
+    port: 80
     protocol: TCP
-    targetPort: 8080
+    targetPort: 80
   selector:
     app: nginx
 ---

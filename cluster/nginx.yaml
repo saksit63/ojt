@@ -70,6 +70,9 @@ spec:
                 # รัน nginx และทำงานเพิ่มเติม
                 nginx & # รัน nginx เบื้องหลัง
 
+                # กำหนดชื่อ pod
+                POD_NAME=$(hostname)
+                
                 # ตรวจสอบและสร้างไฟล์
                 mkdir -p /data1
                 while true; do

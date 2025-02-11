@@ -67,6 +67,9 @@ spec:
             - "/bin/bash"
             - "-c"
             - |
+                # รัน nginx และทำงานเพิ่มเติม
+                nginx & # รัน nginx เบื้องหลัง
+
                 # ตรวจสอบและสร้างไฟล์
                 mkdir -p /data1
                 while true; do

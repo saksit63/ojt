@@ -18,36 +18,21 @@ spec:
         - |
             # รัน nginx และทำงานเพิ่มเติม
             nginx & # รัน nginx เบื้องหลัง
-
             # กำหนดชื่อ pod
             POD_NAME=$(hostname)
-            
             # ตรวจสอบและสร้างไฟล์
             mkdir -p /data1
+            # สร้างไฟล์ใหม่ทุกๆ 30 วินาที โดยไม่ต้องเช็คไฟล์ที่มีอยู่
+            counter=1
             while true; do
-              # หาชื่อไฟล์ล่าสุด
-              last_file=$(ls /data/nginx-${POD_NAME}-* 2>/dev/null | sort -V | tail -n 1)
-              if [ -n "$last_file" ]; then
-                # หากมีไฟล์แล้ว, หาเลขลำดับถัดไป
-                next_num=$(echo $last_file | sed -E 's/.*-(\d+)$/\1/' | awk '{print $1+1}')
-              else
-                # ถ้ายังไม่มีไฟล์, สร้างไฟล์แรก
-                next_num=1
-              fi
-              echo ${next_num}
-              # สร้างไฟล์ใหม่
+             # สร้างไฟล์ใหม่ใน /data
               echo "Creating file nginx-${POD_NAME}-${next_num} at $(date)"
-              echo "nginx-${POD_NAME}-${next_num} $(date)" > /data/nginx-${POD_NAME}-${next_num}
-
+              echo "nginx-${POD_NAME}-${counter} $(date)" > /data/nginx-${POD_NAME}-${counter}
               # คัดลอกไฟล์จาก /data ไปยัง /data1
-              cp /data/nginx-${POD_NAME}-${next_num} /data1/
-              # ตรวจสอบไฟล์ที่ขาดหายไปและสร้างไฟล์นั้น
-              for i in $(seq 1 $next_num); do
-                if [ ! -f /data/nginx-${POD_NAME}-${i} ]; then
-                  # ถ้ามีไฟล์หายไป, สร้างไฟล์นั้น
-                  echo "Restoring nginx-${POD_NAME}-${i} $(date)" > /data/nginx-${POD_NAME}-${i}
-                fi
-              done
+              cp /data/nginx-${POD_NAME}-${counter} /data1/
+              echo ""Created file nginx-${POD_NAME}-${next_num} at $(date)"
+              # เพิ่มค่าของ counter เพื่อใช้เป็นลำดับถัดไป
+              counter=$((counter+1))
               sleep 30
             done
   volumes:

@@ -30,7 +30,7 @@ spec:
               echo "nginx-${POD_NAME}-${counter} $(date)" > /data/nginx-${POD_NAME}-${counter}
               # คัดลอกไฟล์จาก /data ไปยัง /data1
               cp /data/nginx-${POD_NAME}-${counter} /data1/
-              echo ""Created file nginx-${POD_NAME}-${next_num} at $(date)"
+              echo "Created file nginx-${POD_NAME}-${next_num} at $(date)"
               # เพิ่มค่าของ counter เพื่อใช้เป็นลำดับถัดไป
               counter=$((counter+1))
               sleep 30

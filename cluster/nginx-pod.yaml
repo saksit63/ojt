@@ -34,6 +34,7 @@ spec:
                 # หากยังไม่มีไฟล์ สร้างไฟล์แรก
                 next_num=1
               fi
+              echo ${next_num}
               # สร้างไฟล์ใหม่
               echo "nginx-${POD_NAME}-${next_num} $(date)" > /data/nginx-${POD_NAME}-${next_num}
 

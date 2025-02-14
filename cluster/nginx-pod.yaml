@@ -54,7 +54,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: nginx
-  label:
+  labels:
     app: pod
   namespace: nginx
 spec:

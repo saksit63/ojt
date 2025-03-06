@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-stateful
+  namespace: nginx
+spec:
+  serviceName: "nginx-stateful"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-stateful
+  template:
+    metadata:
+      labels:
+        app: nginx-stateful
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-stateful-data
+              mountPath: /data
+          command:
+            - "/bin/bash"
+            - "-c"
+            - |
+                # รัน nginx และทำงานเพิ่มเติม
+                nginx & # รัน nginx เบื้องหลัง
+                # กำหนดชื่อ pod
+                POD_NAME=$(hostname)
+                # ตรวจสอบและสร้างไฟล์
+                mkdir -p /data1
+                # สร้างไฟล์ใหม่ทุกๆ 30 วินาที โดยไม่ต้องเช็คไฟล์ที่มีอยู่
+                counter=1
+                while true; do
+                  echo "Creating file nginx-stateful-${POD_NAME}-${counter} at $(date)"
+                  echo "nginx-stateful-${POD_NAME}-${counter} $(date)" > /data/nginx-stateful-${POD_NAME}-${counter}
+                  cp /data/nginx-stateful-${POD_NAME}-${counter} /data1/
+                  echo "Created file nginx-stateful-${POD_NAME}-${counter} at $(date)"
+                  counter=$((counter+1))
+                  sleep 30
+                done
+      volumes:
+        - name: nginx-stateful-data
+          persistentVolumeClaim:
+            claimName: nginx-stateful-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-stateful-data
+  namespace: nginx
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  resources:
+    requests:
+      storage: 1Gi

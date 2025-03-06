@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-deployment
+  template:
+    metadata:
+      labels:
+        app: nginx-deployment
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-deployment-data
+              mountPath: /data
+          command:
+            - "/bin/bash"
+            - "-c"
+            - |
+                # รัน nginx และทำงานเพิ่มเติม
+                nginx & # รัน nginx เบื้องหลัง
+                # กำหนดชื่อ pod
+                POD_NAME=$(hostname)
+                # ตรวจสอบและสร้างไฟล์
+                mkdir -p /data1
+                # สร้างไฟล์ใหม่ทุกๆ 30 วินาที โดยไม่ต้องเช็คไฟล์ที่มีอยู่
+                counter=1
+                while true; do
+                  echo "Creating file nginx-deployment-${POD_NAME}-${counter} at $(date)"
+                  echo "nginx-deployment-${POD_NAME}-${counter} $(date)" > /data/nginx-deployment-${POD_NAME}-${counter}
+                  cp /data/nginx-deployment-${POD_NAME}-${counter} /data1/
+                  echo "Created file nginx-deployment-${POD_NAME}-${counter} at $(date)"
+                  counter=$((counter+1))
+                  sleep 30
+                done
+      volumes:
+        - name: nginx-deployment-data
+          persistentVolumeClaim:
+            claimName: nginx-deployment-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-deployment-data
+  namespace: nginx
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  resources:
+    requests:
+      storage: 1Gi

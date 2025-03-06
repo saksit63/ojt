@@ -20,7 +20,7 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - name: nginx-stateful-data
+            - name: nginx-data
               mountPath: /data
           command:
             - "/bin/bash"
@@ -42,18 +42,11 @@ spec:
                   counter=$((counter+1))
                   sleep 30
                 done
-      volumes:
-        - name: nginx-stateful-data
-          persistentVolumeClaim:
-            claimName: nginx-stateful-data
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nginx-stateful-data
-  namespace: nginx
-spec:
-  accessModes: [ "ReadWriteOnce" ]
-  resources:
-    requests:
-      storage: 1Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: nginx-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

@@ -52,7 +52,7 @@ metadata:
   name: nginx-deployment-data
   namespace: nginx
 spec:
-  accessModes: [ "ReadWriteOnce" ]
+  accessModes: [ "ReadWriteMany" ]
   resources:
     requests:
       storage: 1Gi

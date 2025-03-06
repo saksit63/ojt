@@ -1,43 +1,43 @@
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx
-  namespace: nginx
-  annotations:
-    konghq.com/protocol: "https,http"
-spec:
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 80
-  selector:
-    app: pod
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: nginx
-  namespace: nginx
-  annotations:
-    konghq.com/https-redirect-status-code: "308"
-    konghq.com/preserve-host: "true"
-    konghq.com/protocols: "https,http"
-    konghq.com/strip-path: "true"
-spec:
-  ingressClassName: kong
-  rules:
-  - host: ojt.controldata.co.th
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: nginx
-            port:
-              number: 80
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: nginx
+#   namespace: nginx
+#   annotations:
+#     konghq.com/protocol: "https,http"
+# spec:
+#   ports:
+#   - name: http
+#     port: 80
+#     protocol: TCP
+#     targetPort: 80
+#   selector:
+#     app: pod
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: nginx
+#   namespace: nginx
+#   annotations:
+#     konghq.com/https-redirect-status-code: "308"
+#     konghq.com/preserve-host: "true"
+#     konghq.com/protocols: "https,http"
+#     konghq.com/strip-path: "true"
+# spec:
+#   ingressClassName: kong
+#   rules:
+#   - host: ojt.controldata.co.th
+#     http:
+#       paths:
+#       - path: /
+#         pathType: ImplementationSpecific
+#         backend:
+#           service:
+#             name: nginx
+#             port:
+#               number: 80
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

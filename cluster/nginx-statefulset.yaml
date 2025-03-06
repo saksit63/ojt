@@ -20,7 +20,7 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - name: nginx-data
+            - name: nginx-data-statefulset
               mountPath: /data
           command:
             - "/bin/bash"
@@ -44,7 +44,7 @@ spec:
                 done
   volumeClaimTemplates:
     - metadata:
-        name: nginx-data
+        name: nginx-data-statefulset
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:
